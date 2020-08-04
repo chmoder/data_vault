@@ -11,7 +11,7 @@ data_vault = "0.1.0"
 
 ```rust,norun
 use credit_card::CreditCard;
-use data_vault::RedisDataVault;
+use data_vault::{RedisDataVault, DataVault};
 
 let vault = RedisDataVault::new();
 
