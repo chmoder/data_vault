@@ -15,7 +15,7 @@ pub struct DeadpoolRedisConfig {
 }
 
 /// Populates a configuration from .env file or Environment Variables
-/// for `encryption::Encryption`.
+/// for `encryption::Aes128CbcEncryption`.
 /// Possible Values:
 /// ENCRYPTED_DATA_VAULT_KEY=000102030405060708090a0b0c0d0e0f
 /// ENCRYPTED_DATA_VAULT_IV=f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
