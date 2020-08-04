@@ -1,9 +1,10 @@
-mod config;
 mod encryption;
+mod tokenizer;
+mod config;
 mod data_vault;
 mod redis_data_vault;
 
-pub use data_vault::DataVault;
+pub use crate::data_vault::DataVault;
 pub use redis_data_vault::RedisDataVault;
 
 
@@ -11,7 +12,7 @@ pub use redis_data_vault::RedisDataVault;
 mod tests {
     use credit_card::CreditCard;
     use crate::{RedisDataVault, DataVault};
-    use crate::encryption::Encryption;
+    use crate::encryption::Aes128CbcEncryption;
 
     #[tokio::test]
     async fn store_retrieve() {
