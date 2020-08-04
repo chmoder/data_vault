@@ -21,5 +21,8 @@ hex = "0.4.2"
 block-modes = "0.5.0"
 aes = "0.4.0"
 
+rand = "0.7.3"
+blake3 = "0.3.6"
+
 [dev-dependencies]
 tokio = { version = "0.2.9", features = ["sync", "macros", "rt-core"] }
