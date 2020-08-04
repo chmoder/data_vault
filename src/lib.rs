@@ -27,8 +27,8 @@ mod tests {
             security_code: None
         };
 
-        vault.store_credit_card(&"token".to_string(), &cc).await;
-        let credit_card = vault.retrieve_credit_card(&"token".to_string()).await;
+        let token = vault.store(&cc).await;
+        let credit_card = vault.retrieve(&token.to_string()).await;
         assert_eq!(credit_card.number, cc.number)
     }
 
@@ -38,7 +38,7 @@ mod tests {
         let x = hex::decode("1b7a4c403124ae2fb52bedc534d82fa8").unwrap();
         let expected_ciphertext = x.as_slice();
 
-        let enc = Encryption::new();
+        let enc = Aes128CbcEncryption::new();
         let ciphertext = enc.encrypt_string(plaintext.clone());
 
         assert_eq!(ciphertext, expected_ciphertext);
@@ -50,7 +50,7 @@ mod tests {
         let x = hex::decode("1b7a4c403124ae2fb52bedc534d82fa8").unwrap();
         let ciphertext = x.as_slice();
 
-        let enc = Encryption::new();
+        let enc = Aes128CbcEncryption::new();
         let decrypted_ciphertext = enc.decrypt(&ciphertext);
 
         assert_eq!(decrypted_ciphertext, plaintext);
@@ -59,7 +59,7 @@ mod tests {
     #[test]
     fn test_encrypt_decrypt() {
         let plaintext = "Hello world!".to_string();
-        let enc = Encryption::new();
+        let enc = Aes128CbcEncryption::new();
         let ciphertext = enc.encrypt_string(plaintext.clone());
         let decrypted_ciphertext = enc.decrypt_vec(ciphertext);
         assert_eq!(decrypted_ciphertext, plaintext);

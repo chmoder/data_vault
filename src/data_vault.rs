@@ -7,8 +7,6 @@ use credit_card::CreditCard;
 #[async_trait]
 pub trait DataVault {
     fn new() -> Self;
-    async fn store(&self, token: &String, credit_card: &String);
-    async fn store_credit_card(&self, token: &String, string: &CreditCard);
-    async fn retrieve(&self, token: &String) -> String;
-    async fn retrieve_credit_card(&self, token: &String) -> CreditCard;
+    async fn store(&self, credit_card: &CreditCard) -> String;
+    async fn retrieve(&self, token: &String) -> CreditCard;
 }
