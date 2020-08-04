@@ -7,7 +7,7 @@ use block_modes::block_padding::Pkcs7;
 type Aes128Cbc = Cbc<Aes128, Pkcs7>;
 
 
-pub struct Encryption {
+pub struct Aes128CbcEncryption {
     key: Vec<u8>,
     iv: Vec<u8>,
     // cipher: Aes128Cbc
@@ -17,13 +17,14 @@ pub struct Encryption {
 /// in DataVault Implementations
 /// # Examples
 /// ```rust
-/// use encryption::Encryption;
+/// use encryption::Aes128CbcEncryption;
 ///
-/// let enc = Encryption::new();
-/// let ciphertext = enc.encrypt_string(plaintext.clone());
+/// let enc = Aes128CbcEncryption::new();
+/// let plaintext = "Hello World!";
+/// let ciphertext = enc.encrypt_string(&plaintext);
 /// let decrypted_ciphertext = enc.decrypt_vec(ciphertext);
 /// ```
-impl Encryption {
+impl Aes128CbcEncryption {
     /// use this class to add encryption to a data vault
     pub fn new() -> Self {
         let cfg = EncryptionConfig::from_env().unwrap();
@@ -59,6 +60,7 @@ impl Encryption {
     }
 
     /// encrypts `String` objects
+    #[allow(dead_code)]
     pub fn encrypt_string(self: &Self, text: String) -> Vec<u8> {
         self.encrypt(text.as_bytes())
     }
