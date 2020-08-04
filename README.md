@@ -24,8 +24,8 @@ let cc = CreditCard {
     security_code: None
 };
 
-vault.store_credit_card(&"token".to_string(), &cc).await;
-let credit_card = vault.retrieve_credit_card(&"token".to_string()).await;
+let token = vault.store_credit_card(&cc).await;
+let credit_card = vault.retrieve_credit_card(&token).await;
 assert_eq!(credit_card.number, cc.number)
 ```
 
@@ -38,6 +38,7 @@ assert_eq!(credit_card.number, cc.number)
 
 # Future Features
 - Swappable Encryption
+- Swappable Tokenization hasher
 - Postgres Database
 
 ### Notice:
