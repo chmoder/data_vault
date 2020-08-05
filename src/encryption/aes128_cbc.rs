@@ -15,15 +15,6 @@ pub struct Aes128CbcEncryption {
 
 /// High level encryption functionality for use
 /// in DataVault Implementations
-/// # Examples
-/// ```rust
-/// use encryption::Aes128CbcEncryption;
-///
-/// let enc = Aes128CbcEncryption::new();
-/// let plaintext = "Hello World!";
-/// let ciphertext = enc.encrypt_string(&plaintext);
-/// let decrypted_ciphertext = enc.decrypt_vec(ciphertext);
-/// ```
 impl Aes128CbcEncryption {
     /// use this class to add encryption to a data vault
     pub fn new() -> Self {
