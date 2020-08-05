@@ -61,6 +61,6 @@ impl DataVault for RedisDataVault {
         let mut conn = self.pool.get().await.unwrap();
         let encrypted_credit_card_json: Vec<u8> = conn.get(token).await.unwrap_or_default();
         let credit_card_json = self.encryption.decrypt(encrypted_credit_card_json.as_slice());
-        serde_json::from_str(&credit_card_json).unwrap()
+        serde_json::from_str(&credit_card_json).unwrap_or_default()
     }
 }
