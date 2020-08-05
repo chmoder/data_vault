@@ -8,7 +8,26 @@ impl Tokenizer for Blake3Tokenizer {
     }
     /// creates a token for a given credit card
     /// # Arguments
-    /// * `credit_card` - a credit card object to hash
+    /// * `CreditCard` - a credit card object to hash
+    /// # Examples
+    /// ```rust
+    /// use data_vault::tokenizer::Tokenizer;
+    /// use data_vault::tokenizer::Blake3Tokenizer;
+    /// use credit_card::CreditCard;
+    ///
+    /// let cc = CreditCard {
+    ///    number: "4111111111111111".to_string(),
+    ///    cardholder_name: "Graydon Hoare".to_string(),
+    ///    expiration_month: "01".to_string(),
+    ///    expiration_year: "2023".to_string(),
+    ///    brand: None,
+    ///    security_code: None
+    /// };
+    ///
+    /// let tokenizer = Blake3Tokenizer::new();
+    /// let token = tokenizer.generate(&cc);
+    ///
+    /// ```
     fn generate(self: &Self, credit_card: &CreditCard) -> String {
         let salt = Self::generate_salt(32);
 
