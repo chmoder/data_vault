@@ -18,16 +18,19 @@ jobs:
         redis-version: [4, 5, 6]
 
     steps:
+      - env:
+          REDIS_URL: redis://@127.0.0.1/
+          ENCRYPTED_DATA_VAULT_KEY: 000102030405060708090a0b0c0d0e0f
+          ENCRYPTED_DATA_VAULT_IV: f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
+
       - name: Start Redis
         uses: supercharge/redis-github-action@1.1.0
         with:
           redis-version: ${{ matrix.redis-version }}
       - uses: actions/checkout@v2
       - name: Build
-        run: cargo build --verbose
+        run: cargo build --release --verbose
       - name: Run tests
-        env:
-          REDIS_URL: redis://@127.0.0.1/
-          ENCRYPTED_DATA_VAULT_KEY: 000102030405060708090a0b0c0d0e0f
-          ENCRYPTED_DATA_VAULT_IV: f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
-        run: cargo test --verbose
+        run: cargo test --release --verbose
+      - name: Run benchmarks
+        run: cargo bench --verbose
