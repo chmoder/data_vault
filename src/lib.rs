@@ -1,17 +1,18 @@
-mod encryption;
-mod tokenizer;
-mod config;
-mod data_vault;
+mod traits;
 mod redis_data_vault;
+mod config;
+pub mod encryption;
+pub mod tokenizer;
 
-pub use crate::data_vault::DataVault;
+pub use traits::DataVault;
 pub use redis_data_vault::RedisDataVault;
 
 
 #[cfg(test)]
 mod tests {
     use credit_card::CreditCard;
-    use crate::{RedisDataVault, DataVault};
+    use crate::traits::DataVault;
+    use crate::redis_data_vault::RedisDataVault;
     use crate::encryption::Aes128CbcEncryption;
 
     #[tokio::test]
@@ -27,8 +28,8 @@ mod tests {
             security_code: None
         };
 
-        let token = vault.store(&cc).await;
-        let credit_card = vault.retrieve(&token.to_string()).await;
+        let token = vault.store_credit_card(&cc).await;
+        let credit_card = vault.retrieve_credit_card(&token.to_string()).await;
         assert_eq!(credit_card.number, cc.number)
     }
 
