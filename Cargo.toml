@@ -26,3 +26,8 @@ blake3 = "0.3.6"
 
 [dev-dependencies]
 tokio = { version = "0.2.9", features = ["sync", "macros", "rt-core"] }
+criterion = "^0.3"
+
+[[bench]]
+name = "data_vault_benchmark"
+harness = false
