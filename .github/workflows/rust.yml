@@ -27,7 +27,8 @@ jobs:
         uses: supercharge/redis-github-action@1.1.0
         with:
           redis-version: ${{ matrix.redis-version }}
-      - uses: actions/checkout@v2
+      - name: Checkout Data Vault
+        uses: actions/checkout@v2
       - name: Build
         run: cargo build --release --verbose
       - name: Run tests
