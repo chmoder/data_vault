@@ -20,6 +20,7 @@ jobs:
       REDIS_URL: redis://@127.0.0.1/
       ENCRYPTED_DATA_VAULT_KEY: 000102030405060708090a0b0c0d0e0f
       ENCRYPTED_DATA_VAULT_IV: f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     steps:
       - name: Start Redis
@@ -34,13 +35,12 @@ jobs:
         run: cargo test --release --verbose
       - name: Run benchmarks
         run: cargo bench --verbose
-      - name: Install grcov
-        run: cargo install grcov
-      - name: Run grcov
-        run: grcov ./target/debug -t coveralls -s . --token ${{ secrets.CODECOV_TOKEN }} > codecov.json
+      - name: Install tarpaulin
+        run: cargo install cargo-tarpaulin
+      - name: Run tarpaulin
+        run: cargo tarpaulin --out Xml
       - name: Upload CodeCov Report
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: codecov.json
           fail_ci_if_error: true
