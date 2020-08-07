@@ -14,6 +14,12 @@ pub trait Tokenizer {
     /// creates a random salt with given length
     /// # Arguments
     /// * `length` - the length of string to return
+    /// ```rust
+    /// use data_vault::tokenizer::Tokenizer;
+    /// use data_vault::tokenizer::Blake3Tokenizer;
+    ///
+    /// let salt = Blake3Tokenizer::generate_salt(32);
+    /// ```
     fn generate_salt(length: usize) -> String {
         let mut rng = thread_rng();
         iter::repeat(())
