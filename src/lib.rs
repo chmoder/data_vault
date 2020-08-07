@@ -2,7 +2,7 @@
 //!
 //! ## Example
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use data_vault::DataVault;
 //! use data_vault::RedisDataVault;
 //! use credit_card::CreditCard;
