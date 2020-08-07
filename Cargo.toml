@@ -1,12 +1,12 @@
 [package]
 name = "data_vault"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["tcross <tom.bz2@gmail.com>"]
 edition = "2018"
-documentation = "https://docs.rs/credit_card"
+documentation = "https://docs.rs/data_vault"
 readme = "README.md"
 repository = "https://github.com/chmoder/data_vault/"
-description = "A credit card tokenization data vault library"
+description = "Data Vault is a modular, pragmatic, credit card vault for Rust."
 license = "MIT"
 
 [dependencies]
