@@ -1,3 +1,38 @@
+//! Data Vault is a modular, pragmatic, credit card vault for Rust.
+//!
+//! ## Example
+//!
+//! ```rust,no_run
+//! use data_vault::DataVault;
+//! use data_vault::RedisDataVault;
+//! use credit_card::CreditCard;
+//!
+//! let vault = RedisDataVault::new();
+//!
+//! let cc = CreditCard {
+//! number: "4111111111111111".to_string(),
+//! cardholder_name: "Graydon Hoare".to_string(),
+//! expiration_month: "01".to_string(),
+//! expiration_year: "2023".to_string(),
+//! brand: None,
+//! security_code: None
+//! };
+//!
+//! let token = vault.store_credit_card(&cc).await;
+//! let credit_card = vault.retrieve_credit_card(&token.to_string()).await;
+//! assert_eq!(credit_card.number, cc.number)
+//! ```
+//!
+//! ## Features
+//!
+//! * Store [Credit Cards](https://github.com/chmoder/credit_card)
+//! * Store `String`
+//! * Automatic Encryption and Decryption
+//! * Blake3 tokenization
+//! * Redis Server, URL connection configuration
+//! * Configurable from .env file or Environment Variables
+//! * Runs on stable Rust
+
 mod traits;
 mod redis_data_vault;
 mod config;

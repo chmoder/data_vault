@@ -34,3 +34,11 @@ jobs:
         run: cargo test --release --verbose
       - name: Run benchmarks
         run: cargo bench --verbose
+      - name: Install grcov
+        run: cargo install grcov
+      - name: Run grcov
+        run: grcov ./target/debug -t coveralls -s . --token ${{ secrets.CODECOV_TOKEN }} > codecov.json
+      - name: Upload CodeCov Report
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: codecov.json
+        fail_ci_if_error: true
