@@ -33,6 +33,13 @@ pub struct RedisDataVault {
 #[async_trait]
 impl DataVault for RedisDataVault {
     /// Create new RedisDataVault backend
+    /// # examples
+    /// ```rust
+    /// use data_vault::DataVault;
+    /// use data_vault::RedisDataVault;
+    ///
+    /// let rdv = RedisDataVault::new();
+    /// ```
     fn new() -> Self {
         let cfg = DeadpoolRedisConfig::from_env().unwrap();
 
@@ -48,6 +55,16 @@ impl DataVault for RedisDataVault {
     ///     * `CreditCard` - the cc object that you wish to store
     /// return:
     ///     the token as String
+    /// # example
+    /// ```rust
+    /// use data_vault::DataVault;
+    /// use data_vault::RedisDataVault;
+    ///
+    /// let token = String::from("abc123");
+    /// let credit_card_string = String::from("{number: 123}");
+    /// let rdv = RedisDataVault::new();
+    /// rdv.store(&token, &credit_card_string);
+    /// ```
     async fn store(&self, token: &String, string: &String) {
         let mut conn = self.pool.get().await.unwrap();
         let encrypted_json = self.encryption.encrypt(string.as_bytes());
@@ -59,6 +76,24 @@ impl DataVault for RedisDataVault {
     ///     * `CreditCard` - the cc object that you wish to store
     /// return:
     ///     A new token as String
+    /// # example
+    /// ```rust
+    /// use data_vault::DataVault;
+    /// use data_vault::RedisDataVault;
+    /// use credit_card::CreditCard;
+    ///
+    /// let cc = CreditCard {
+    ///    number: "4111111111111111".to_string(),
+    ///    cardholder_name: "Graydon Hoare".to_string(),
+    ///    expiration_month: "01".to_string(),
+    ///    expiration_year: "2023".to_string(),
+    ///    brand: None,
+    ///    security_code: None
+    /// };
+    ///
+    /// let rdv = RedisDataVault::new();
+    /// let token = rdv.store_credit_card(&cc);
+    /// ```
     async fn store_credit_card(&self, credit_card: &CreditCard) -> String {
         let token = self.tokenizer.generate(&credit_card);
         let credit_card_json = serde_json::to_string(&credit_card).unwrap();
@@ -71,6 +106,17 @@ impl DataVault for RedisDataVault {
     ///     * `token`: the string form of the ID of the data
     /// returns:
     ///     * the decrypted string of data
+    /// # example
+    /// ```rust,ignore
+    /// use data_vault::DataVault;
+    /// use data_vault::RedisDataVault;
+    ///
+    /// let token = String::from("abc123");
+    /// let cc_string = String::from("{number: 123}");
+    /// let rdv = RedisDataVault::new();
+    /// rdv.store(&token, &cc_string).await;
+    /// let credit_card_string = rdv.retrieve(&token)
+    /// ```
     async fn retrieve(&self, token: &String) -> String {
         let mut conn = self.pool.get().await.unwrap();
         let encrypted_credit_card_json: Vec<u8> = conn.get(token).await.unwrap_or_default();
@@ -82,6 +128,25 @@ impl DataVault for RedisDataVault {
     ///     * `token`: the string form of the ID of the data
     /// returns:
     ///     * `CreditCard` object
+    /// # Example
+    /// ```rust,ignore
+    /// use data_vault::DataVault;
+    /// use data_vault::RedisDataVault;
+    /// use credit_card::CreditCard;
+    ///
+    /// let cc = CreditCard {
+    ///    number: "4111111111111111".to_string(),
+    ///    cardholder_name: "Graydon Hoare".to_string(),
+    ///    expiration_month: "01".to_string(),
+    ///    expiration_year: "2023".to_string(),
+    ///    brand: None,
+    ///    security_code: None
+    /// };
+    ///
+    /// let rdv = RedisDataVault::new();
+    /// let token = rdv.store_credit_card(&cc).await;
+    /// let credit_card = rdv.retrieve_credit_card(&token).await;
+    /// ```
     async fn retrieve_credit_card(&self, token: &String) -> CreditCard {
         let credit_card_json = self.retrieve(token).await;
         serde_json::from_str(&credit_card_json).unwrap_or_default()
