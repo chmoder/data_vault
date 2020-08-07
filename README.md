@@ -6,7 +6,7 @@ Data Vault is a library for storing and retrieving Credit Card data via Tokens.
 
 #### add data_vault as a dependency to Cargo.toml 
 ```toml
-data_vault = "0.1.2"
+data_vault = "0.1.3"
 ```
 
 ```rust,norun
@@ -31,8 +31,10 @@ assert_eq!(credit_card.number, cc.number)
 
 # Current Features
 - Store [Credit Cards](https://github.com/chmoder/credit_card)
+- Store `String`
 - Automatic Encryption and Decryption
-- Redis Database with Auth password
+- Blake3 tokenization
+- Redis Server, URL connection configuration
 - Configurable from .env file or Environment Variables
 
 # Future Features
