@@ -1,6 +1,6 @@
 [package]
 name = "data_vault"
-version = "0.1.4"
+version = "0.1.5"
 authors = ["tcross <tom.bz2@gmail.com>"]
 edition = "2018"
 documentation = "https://docs.rs/data_vault"
@@ -28,6 +28,11 @@ blake3 = "^0.3"
 [dev-dependencies]
 tokio = { version = "^0.2", features = ["sync", "macros", "rt-core"] }
 criterion = "^0.3"
+
+[profile.release]
+lto = true
+opt-level = 3
+codegen-units = 1
 
 [[bench]]
 name = "data_vault_benchmark"
