@@ -17,6 +17,11 @@ pub struct Aes128CbcEncryption {
 /// in DataVault Implementations
 impl Aes128CbcEncryption {
     /// use this class to add encryption to a data vault
+    /// # Example
+    /// ```rust
+    /// use data_vault::encryption::Aes128CbcEncryption;
+    /// let enc = Aes128CbcEncryption::new();
+    /// ```
     pub fn new() -> Self {
         let cfg = EncryptionConfig::from_env().unwrap();
 
@@ -46,23 +51,55 @@ impl Aes128CbcEncryption {
 
     /// lowest level method that will encrypt data from this
     /// or higher level methods like `encrypt_string`
+    /// # Example
+    /// ```rust
+    /// use data_vault::encryption::Aes128CbcEncryption;
+    ///
+    /// let enc = Aes128CbcEncryption::new();
+    /// let test_data = String::from("Hello world!");
+    /// let encrypted_data = enc.encrypt(test_data.as_bytes());
+    /// ```
     pub fn encrypt(self: &Self, bytes: &[u8]) -> Vec<u8> {
         self.new_cipher().encrypt_vec(bytes)
     }
 
     /// encrypts `String` objects
+    /// # Example
+    /// ```rust
+    /// use data_vault::encryption::Aes128CbcEncryption;
+    ///
+    /// let enc = Aes128CbcEncryption::new();
+    /// let test_data = String::from("Hello world!");
+    /// let encrypted_data = enc.encrypt_string(&test_data);
+    /// ```
     #[allow(dead_code)]
-    pub fn encrypt_string(self: &Self, text: String) -> Vec<u8> {
+    pub fn encrypt_string(self: &Self, text: &String) -> Vec<u8> {
         self.encrypt(text.as_bytes())
     }
 
     /// lowest level method to decrypt data
+    /// # Example
+    /// ```rust
+    /// use data_vault::encryption::Aes128CbcEncryption;
+    ///
+    /// let enc = Aes128CbcEncryption::new();
+    /// let test_data = vec![27, 122, 76, 64, 49, 36, 174, 47, 181, 43, 237, 197, 52, 216, 47, 168];
+    /// let encrypted_data = enc.decrypt_vec(test_data);
+    /// ```
     pub fn decrypt(self: &Self, cipher_bytes: &[u8]) -> String {
         let decrypt_vec = self.new_cipher().decrypt_vec(cipher_bytes).unwrap();
         String::from_utf8(decrypt_vec).unwrap_or_default()
     }
 
     /// decrypts a `Vec<u8>`
+    /// # Example
+    /// ```rust
+    /// use data_vault::encryption::Aes128CbcEncryption;
+    ///
+    /// let enc = Aes128CbcEncryption::new();
+    /// let test_data = vec![27, 122, 76, 64, 49, 36, 174, 47, 181, 43, 237, 197, 52, 216, 47, 168];
+    /// let encrypted_data = enc.decrypt(test_data.as_slice());
+    /// ```
     #[allow(dead_code)]
     pub fn decrypt_vec(self: &Self, cipher_vector: Vec<u8>) -> String {
         let cipher_bytes = cipher_vector.as_slice();

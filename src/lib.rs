@@ -40,7 +40,7 @@ mod tests {
         let expected_ciphertext = x.as_slice();
 
         let enc = Aes128CbcEncryption::new();
-        let ciphertext = enc.encrypt_string(plaintext.clone());
+        let ciphertext = enc.encrypt_string(&plaintext);
 
         assert_eq!(ciphertext, expected_ciphertext);
     }
@@ -61,7 +61,7 @@ mod tests {
     fn test_encrypt_decrypt() {
         let plaintext = "Hello world!".to_string();
         let enc = Aes128CbcEncryption::new();
-        let ciphertext = enc.encrypt_string(plaintext.clone());
+        let ciphertext = enc.encrypt_string(&plaintext);
         let decrypted_ciphertext = enc.decrypt_vec(ciphertext);
         assert_eq!(decrypted_ciphertext, plaintext);
     }
