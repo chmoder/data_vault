@@ -18,16 +18,17 @@ async-trait = "^0.1" # remove some day hopefully
 credit_card = { version = "^0.1" }
 dotenv = "^0.15"
 hex = "^0.4"
-
 block-modes = "^0.5"
 aes = "^0.4"
-
 rand = "^0.7"
 blake3 = "^0.3"
 
 [dev-dependencies]
-tokio = { version = "^0.2", features = ["sync", "macros", "rt-core"] }
 criterion = "^0.3"
+env_logger = "^0.7"
+log = "^0.4"
+futures = "^0.3"
+tokio = { version = "^0.2", features = ["full"] }
 
 [profile.release]
 lto = true
@@ -37,3 +38,6 @@ codegen-units = 1
 [[bench]]
 name = "data_vault_benchmark"
 harness = false
+
+[[example]]
+name = "benchmark"
