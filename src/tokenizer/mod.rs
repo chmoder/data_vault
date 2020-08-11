@@ -9,7 +9,7 @@ pub use blake3_tokenizer::Blake3Tokenizer;
 
 pub trait Tokenizer {
     fn new() -> Self;
-    fn generate(self: &Self, credit_card: &CreditCard) -> String;
+    fn generate(&self, credit_card: &CreditCard) -> String;
 
     /// creates a random salt with given length
     /// # Arguments

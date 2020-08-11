@@ -28,7 +28,7 @@ impl Tokenizer for Blake3Tokenizer {
     /// let token = tokenizer.generate(&cc);
     ///
     /// ```
-    fn generate(self: &Self, credit_card: &CreditCard) -> String {
+    fn generate(&self, credit_card: &CreditCard) -> String {
         let salt = Self::generate_salt(32);
 
         let security_code = credit_card.security_code.clone();
