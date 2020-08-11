@@ -3,7 +3,7 @@ use credit_card::CreditCard;
 use deadpool_redis::redis::AsyncCommands;
 use crate::traits::{DataVault};
 use crate::config::DeadpoolRedisConfig;
-use crate::encryption::Aes128CbcEncryption;
+use crate::encryption::{Aes128CbcEncryption, Encryption};
 use crate::tokenizer::{Tokenizer, Blake3Tokenizer};
 
 /// Use redis as a data vault back end
@@ -24,7 +24,7 @@ use crate::tokenizer::{Tokenizer, Blake3Tokenizer};
 ///
 /// # Panics
 /// Will panic when connection can not be made
-pub struct RedisDataVault {
+pub struct RedisDataVault<E: Encryption, T: Tokenizer> {
     pool: deadpool_redis::Pool,
     encryption: Aes128CbcEncryption,
     tokenizer: Blake3Tokenizer
