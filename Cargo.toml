@@ -19,6 +19,7 @@ credit_card = { version = "^0.1" }
 dotenv = "^0.15"
 hex = "^0.4"
 block-modes = "^0.5"
+aes-gcm-siv = "0.5.0"
 aes = "^0.4"
 rand = "^0.7"
 blake3 = "^0.3"
