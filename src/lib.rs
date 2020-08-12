@@ -48,7 +48,8 @@ mod tests {
     use credit_card::CreditCard;
     use crate::traits::DataVault;
     use crate::redis_data_vault::RedisDataVault;
-    use crate::encryption::Aes128CbcEncryption;
+    use crate::encryption::traits::Encryption;
+    use crate::encryption::AesGcmSivEncryption;
 
     #[tokio::test]
     async fn store_retrieve() {
@@ -71,10 +72,10 @@ mod tests {
     #[test]
     fn test_encrypt_string() {
         let plaintext = "Hello world!".to_string();
-        let x = hex::decode("1b7a4c403124ae2fb52bedc534d82fa8").unwrap();
+        let x = hex::decode("3ca491c9cfc1097ecfaad15968daf4b22c4f032374cf40bd7398b6d4").unwrap();
         let expected_ciphertext = x.as_slice();
 
-        let enc = Aes128CbcEncryption::new();
+        let enc = AesGcmSivEncryption::new();
         let ciphertext = enc.encrypt_string(&plaintext);
 
         assert_eq!(ciphertext, expected_ciphertext);
@@ -83,10 +84,10 @@ mod tests {
     #[test]
     fn test_decrypt() {
         let plaintext = "Hello world!".to_string();
-        let x = hex::decode("1b7a4c403124ae2fb52bedc534d82fa8").unwrap();
+        let x = hex::decode("3ca491c9cfc1097ecfaad15968daf4b22c4f032374cf40bd7398b6d4").unwrap();
         let ciphertext = x.as_slice();
 
-        let enc = Aes128CbcEncryption::new();
+        let enc = AesGcmSivEncryption::new();
         let decrypted_ciphertext = enc.decrypt(&ciphertext);
 
         assert_eq!(decrypted_ciphertext, plaintext);
@@ -95,7 +96,7 @@ mod tests {
     #[test]
     fn test_encrypt_decrypt() {
         let plaintext = "Hello world!".to_string();
-        let enc = Aes128CbcEncryption::new();
+        let enc = AesGcmSivEncryption::new();
         let ciphertext = enc.encrypt_string(&plaintext);
         let decrypted_ciphertext = enc.decrypt_vec(ciphertext);
         assert_eq!(decrypted_ciphertext, plaintext);
