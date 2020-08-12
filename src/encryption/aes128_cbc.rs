@@ -2,7 +2,7 @@ use crate::config::EncryptionConfig;
 use aes::Aes128;
 use block_modes::{BlockMode, Cbc};
 use block_modes::block_padding::Pkcs7;
-use crate::encryption::Encryption;
+use crate::encryption::traits::{Encryption, Aes128CbcCipher};
 
 // create an alias for convenience
 type Aes128Cbc = Cbc<Aes128, Pkcs7>;
@@ -20,7 +20,8 @@ impl Encryption for Aes128CbcEncryption {
     /// use this class to add encryption to a data vault
     /// # Example
     /// ```rust
-    /// use data_vault::encryption::Aes128CbcEncryption;
+    /// use data_vault::encryption::traits::Aes128CbcCipher;
+    /// use data_vault::encryption::traits::Aes128CbcEncryption;
     /// let enc = Aes128CbcEncryption::new();
     /// ```
     fn new() -> Self {
@@ -28,7 +29,7 @@ impl Encryption for Aes128CbcEncryption {
 
         let key = hex::decode(cfg.key).unwrap();
         let iv = hex::decode(cfg.iv).unwrap();
-        // let cipher = Aes128Cbc::new_var(
+        // let mut cipher = Aes128Cbc::new_var(
         //     key.clone().as_slice(),
         //     iv.clone().as_slice()
         // ).unwrap();
@@ -40,21 +41,12 @@ impl Encryption for Aes128CbcEncryption {
         }
     }
 
-    /// Creates a new instance of the cipher
-    /// This is a temporary work around to issues
-    /// borrowing from self.cipher Aes128Cbc does not implement Copy, Clone
-    /// Like:
-    /// move occurs because value has type `block_modes::cbc::Cbc<aes_soft::impls::Aes128,
-    /// block_padding::Pkcs7>`, which does not implement the `Copy` trait
-    fn new_cipher(&self) -> Cbc<Aes128, Pkcs7> {
-        Aes128Cbc::new_var(self.key.as_slice(), self.iv.as_slice()).unwrap()
-    }
-
     /// lowest level method that will encrypt data from this
     /// or higher level methods like `encrypt_string`
     /// # Example
     /// ```rust
-    /// use data_vault::encryption::Aes128CbcEncryption;
+    /// use data_vault::encryption::traits::Aes128CbcCipher;
+    /// use data_vault::encryption::traits::Aes128CbcEncryption;
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = String::from("Hello world!");
@@ -67,7 +59,8 @@ impl Encryption for Aes128CbcEncryption {
     /// encrypts `String` objects
     /// # Example
     /// ```rust
-    /// use data_vault::encryption::Aes128CbcEncryption;
+    /// use data_vault::encryption::traits::Aes128CbcCipher;
+    /// use data_vault::encryption::traits::Aes128CbcEncryption;
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = String::from("Hello world!");
@@ -81,7 +74,8 @@ impl Encryption for Aes128CbcEncryption {
     /// lowest level method to decrypt data
     /// # Example
     /// ```rust
-    /// use data_vault::encryption::Aes128CbcEncryption;
+    /// use data_vault::encryption::traits::Aes128CbcCipher;
+    /// use data_vault::encryption::traits::Aes128CbcEncryption;
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = vec![27, 122, 76, 64, 49, 36, 174, 47, 181, 43, 237, 197, 52, 216, 47, 168];
@@ -95,7 +89,8 @@ impl Encryption for Aes128CbcEncryption {
     /// decrypts a `Vec<u8>`
     /// # Example
     /// ```rust
-    /// use data_vault::encryption::Aes128CbcEncryption;
+    /// use data_vault::encryption::traits::Aes128CbcCipher;
+    /// use data_vault::encryption::traits::Aes128CbcEncryption;
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = vec![27, 122, 76, 64, 49, 36, 174, 47, 181, 43, 237, 197, 52, 216, 47, 168];
@@ -105,5 +100,16 @@ impl Encryption for Aes128CbcEncryption {
     fn decrypt_vec(&self, cipher_vector: Vec<u8>) -> String {
         let cipher_bytes = cipher_vector.as_slice();
         self.decrypt(cipher_bytes)
+    }
+}
+
+impl Aes128CbcCipher for Aes128CbcEncryption {    /// Creates a new instance of the cipher
+    /// This is a temporary work around to issues
+    /// borrowing from self.cipher Aes128Cbc does not implement Copy, Clone
+    /// Like:
+    /// move occurs because value has type `block_modes::cbc::Cbc<aes_soft::impls::Aes128,
+    /// block_padding::Pkcs7>`, which does not implement the `Copy` trait
+    fn new_cipher(&self) -> Cbc<Aes128, Pkcs7> {
+        Aes128Cbc::new_var(self.key.as_slice(), self.iv.as_slice()).unwrap()
     }
 }
