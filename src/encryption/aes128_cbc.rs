@@ -20,8 +20,9 @@ impl Encryption for Aes128CbcEncryption {
     /// use this class to add encryption to a data vault
     /// # Example
     /// ```rust
+    /// use data_vault::encryption::traits::Encryption;
     /// use data_vault::encryption::traits::Aes128CbcCipher;
-    /// use data_vault::encryption::traits::Aes128CbcEncryption;
+    /// use data_vault::encryption::Aes128CbcEncryption;
     /// let enc = Aes128CbcEncryption::new();
     /// ```
     fn new() -> Self {
@@ -45,8 +46,9 @@ impl Encryption for Aes128CbcEncryption {
     /// or higher level methods like `encrypt_string`
     /// # Example
     /// ```rust
+    /// use data_vault::encryption::traits::Encryption;
     /// use data_vault::encryption::traits::Aes128CbcCipher;
-    /// use data_vault::encryption::traits::Aes128CbcEncryption;
+    /// use data_vault::encryption::Aes128CbcEncryption;
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = String::from("Hello world!");
@@ -59,8 +61,9 @@ impl Encryption for Aes128CbcEncryption {
     /// encrypts `String` objects
     /// # Example
     /// ```rust
+    /// use data_vault::encryption::traits::Encryption;
     /// use data_vault::encryption::traits::Aes128CbcCipher;
-    /// use data_vault::encryption::traits::Aes128CbcEncryption;
+    /// use data_vault::encryption::Aes128CbcEncryption;
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = String::from("Hello world!");
@@ -74,8 +77,9 @@ impl Encryption for Aes128CbcEncryption {
     /// lowest level method to decrypt data
     /// # Example
     /// ```rust
+    /// use data_vault::encryption::traits::Encryption;
     /// use data_vault::encryption::traits::Aes128CbcCipher;
-    /// use data_vault::encryption::traits::Aes128CbcEncryption;
+    /// use data_vault::encryption::Aes128CbcEncryption;
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = vec![27, 122, 76, 64, 49, 36, 174, 47, 181, 43, 237, 197, 52, 216, 47, 168];
@@ -89,8 +93,9 @@ impl Encryption for Aes128CbcEncryption {
     /// decrypts a `Vec<u8>`
     /// # Example
     /// ```rust
+    /// use data_vault::encryption::traits::Encryption;
     /// use data_vault::encryption::traits::Aes128CbcCipher;
-    /// use data_vault::encryption::traits::Aes128CbcEncryption;
+    /// use data_vault::encryption::Aes128CbcEncryption;
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = vec![27, 122, 76, 64, 49, 36, 174, 47, 181, 43, 237, 197, 52, 216, 47, 168];
@@ -103,7 +108,8 @@ impl Encryption for Aes128CbcEncryption {
     }
 }
 
-impl Aes128CbcCipher for Aes128CbcEncryption {    /// Creates a new instance of the cipher
+impl Aes128CbcCipher for Aes128CbcEncryption {
+    /// Creates a new instance of the cipher
     /// This is a temporary work around to issues
     /// borrowing from self.cipher Aes128Cbc does not implement Copy, Clone
     /// Like:

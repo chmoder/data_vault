@@ -1,6 +1,6 @@
-use block_modes::{Cbc};
-use block_modes::block_padding::{Pkcs7};
+use block_modes::Cbc;
 use aes::Aes128;
+use block_modes::block_padding::Pkcs7;
 
 pub trait Encryption {
     fn new() -> Self;
