@@ -73,20 +73,23 @@ mod tests {
     #[test]
     fn test_encrypt_string() {
         let plaintext = "Hello world!".to_string();
-        let x = hex::decode("3ca491c9cfc1097ecfaad15968daf4b22c4f032374cf40bd7398b6d4").unwrap();
-        let expected_ciphertext = x.as_slice();
+        // let x = hex::decode("feb261e2d1ead79e0adcdf95d743b97d2a875603d10476f1fef2df5f").unwrap();
+        // let expected_ciphertext = x.as_slice();
 
         let enc = AesGcmSivEncryption::new();
-        let ciphertext = enc.encrypt_string(&plaintext);
+        let data = enc.encrypt_string(&plaintext);
+        let decrypted_data = enc.decrypt_vec(data);
+        // let (nonce, ciphertext) = data.split_at(12);
 
-        assert_eq!(ciphertext, expected_ciphertext);
+        assert_eq!(plaintext, decrypted_data);
     }
 
     #[test]
     fn test_decrypt() {
         let plaintext = "Hello world!".to_string();
+        let nonce = b"unique nonce";
         let x = hex::decode("3ca491c9cfc1097ecfaad15968daf4b22c4f032374cf40bd7398b6d4").unwrap();
-        let ciphertext = x.as_slice();
+        let ciphertext = [nonce, x.as_slice()].concat();
 
         let enc = AesGcmSivEncryption::new();
         let decrypted_ciphertext = enc.decrypt(&ciphertext);
