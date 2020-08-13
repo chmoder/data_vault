@@ -36,6 +36,7 @@
 mod traits;
 mod redis_data_vault;
 mod config;
+pub mod utils;
 pub mod encryption;
 pub mod tokenizer;
 
