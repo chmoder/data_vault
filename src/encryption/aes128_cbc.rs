@@ -114,7 +114,14 @@ impl Aes128CbcCipher for Aes128CbcEncryption {
     /// borrowing from self.cipher Aes128Cbc does not implement Copy, Clone
     /// Like:
     /// move occurs because value has type `block_modes::cbc::Cbc<aes_soft::impls::Aes128,
-    /// block_padding::Pkcs7>`, which does not implement the `Copy` trait
+    /// ```rust
+    /// use data_vault::encryption::traits::Encryption;
+    /// use data_vault::encryption::traits::Aes128CbcCipher;
+    /// use data_vault::encryption::Aes128CbcEncryption;
+    ///
+    /// let enc = Aes128CbcEncryption::new();
+    /// let cipher = enc.new_cipher();
+    /// ```
     fn new_cipher(&self) -> Cbc<Aes128, Pkcs7> {
         Aes128Cbc::new_var(self.key.as_slice(), self.iv.as_slice()).unwrap()
     }
