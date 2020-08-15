@@ -54,7 +54,7 @@ mod tests {
 
     #[tokio::test]
     async fn store_retrieve() {
-        let vault = RedisDataVault::new();
+        let vault = RedisDataVault::<AesGcmSivEncryption>::new().unwrap();
 
         let cc = CreditCard {
             number: "4111111111111111".to_string(),
@@ -65,8 +65,8 @@ mod tests {
             security_code: None
         };
 
-        let token = vault.store_credit_card(&cc).await;
-        let credit_card = vault.retrieve_credit_card(&token.to_string()).await;
+        let token = vault.store_credit_card(&cc).await.unwrap();
+        let credit_card = vault.retrieve_credit_card(&token.to_string()).await.unwrap();
         assert_eq!(credit_card.number, cc.number)
     }
 
