@@ -6,13 +6,15 @@ use std::vec;
 use std::time::{Instant};
 use std::sync::Arc;
 use data_vault::encryption::AesGcmSivEncryption;
+use data_vault::tokenizer::Blake3Tokenizer;
 
 #[tokio::main(core_threads = 4)]
 async fn main() {
     env_logger::init();
 
     let mut token_futures = vec::Vec::new();
-    let vault = Arc::new(RedisDataVault::<AesGcmSivEncryption>::new().unwrap());
+    let redis_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
+    let vault = Arc::new(redis_vault);
     let cc = Arc::new(CreditCard {
         number: "4111111111111111".to_string(),
         cardholder_name: "Graydon Hoare".to_string(),

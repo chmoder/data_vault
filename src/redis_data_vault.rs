@@ -4,7 +4,7 @@ use deadpool_redis::redis::{AsyncCommands};
 use crate::traits::{DataVault};
 use crate::config::DeadpoolRedisConfig;
 use crate::encryption::traits::Encryption;
-use crate::tokenizer::{Tokenizer, Blake3Tokenizer};
+use crate::tokenizer::{Tokenizer};
 use deadpool_redis::PoolError;
 use std::error;
 
@@ -26,15 +26,18 @@ use std::error;
 ///
 /// # Panics
 /// Will panic when connection can not be made
-pub struct RedisDataVault<E> {
+pub struct RedisDataVault<E, T> {
     pool: deadpool_redis::Pool,
     encryption: E,
-    tokenizer: Blake3Tokenizer,
+    tokenizer: T,
 }
 
 #[async_trait]
-impl<E> DataVault for RedisDataVault<E>
-    where E: Encryption + std::marker::Sync + std::marker::Send {
+impl<E, T> DataVault for RedisDataVault<E, T>
+    where
+        E: Encryption + std::marker::Sync + std::marker::Send,
+        T: Tokenizer + std::marker::Sync + std::marker::Send,
+{
     /// Create new RedisDataVault backend
     /// # examples
     /// ```rust
@@ -51,7 +54,7 @@ impl<E> DataVault for RedisDataVault<E>
         let redis_data_vault = RedisDataVault {
             pool,
             encryption: E::new(),
-            tokenizer: Blake3Tokenizer::new()
+            tokenizer: T::new()
         };
 
         Ok(redis_data_vault)
