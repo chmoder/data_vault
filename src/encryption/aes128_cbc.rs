@@ -83,7 +83,7 @@ impl Encryption for Aes128CbcEncryption {
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = vec![27, 122, 76, 64, 49, 36, 174, 47, 181, 43, 237, 197, 52, 216, 47, 168];
-    /// let encrypted_data = enc.decrypt_vec(test_data);
+    /// let encrypted_data = enc.decrypt(test_data.as_slice());
     /// ```
     fn decrypt(&self, cipher_bytes: &[u8]) -> String {
         let decrypt_vec = self.new_cipher().decrypt_vec(cipher_bytes).unwrap();
@@ -99,7 +99,7 @@ impl Encryption for Aes128CbcEncryption {
     ///
     /// let enc = Aes128CbcEncryption::new();
     /// let test_data = vec![27, 122, 76, 64, 49, 36, 174, 47, 181, 43, 237, 197, 52, 216, 47, 168];
-    /// let encrypted_data = enc.decrypt(test_data.as_slice());
+    /// let encrypted_data = enc.decrypt_vec(test_data);
     /// ```
     #[allow(dead_code)]
     fn decrypt_vec(&self, cipher_vector: Vec<u8>) -> String {
@@ -124,5 +124,34 @@ impl Aes128CbcCipher for Aes128CbcEncryption {
     /// ```
     fn new_cipher(&self) -> Cbc<Aes128, Pkcs7> {
         Aes128Cbc::new_var(self.key.as_slice(), self.iv.as_slice()).unwrap()
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::encryption::traits::Encryption;
+    use crate::encryption::Aes128CbcEncryption;
+
+    #[test]
+    fn test_aes128_cbc_encrypt() {
+        let enc = Aes128CbcEncryption::new();
+        let test_data = String::from("Hello world!");
+        let _encrypted_data = enc.encrypt_string(&test_data);
+    }
+
+    #[test]
+    fn test_aes128_cbc_decrypt() {
+        let enc = Aes128CbcEncryption::new();
+        let test_data = vec![27, 122, 76, 64, 49, 36, 174, 47, 181, 43, 237, 197, 52, 216, 47, 168];
+        let _decrypted_data = enc.decrypt_vec(test_data);
+    }
+
+    #[test]
+    fn test_aes128_cbc_encrypt_decrypt() {
+        let enc = Aes128CbcEncryption::new();
+        let test_data = String::from("Hello world!");
+        let encrypted_data = enc.encrypt_string(&test_data);
+        let decrypted_data = enc.decrypt_vec(encrypted_data);
+        assert_eq!(test_data, decrypted_data)
     }
 }

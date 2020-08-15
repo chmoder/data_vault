@@ -121,3 +121,18 @@ impl Encryption for AesGcmSivEncryption {
         self.decrypt(cipher_bytes)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::encryption::traits::Encryption;
+    use crate::encryption::AesGcmSivEncryption;
+
+    #[test]
+    fn test_aes_gcm_siv_encrypt_decrypt() {
+        let enc = AesGcmSivEncryption::new();
+        let test_data = String::from("Hello world!");
+        let encrypted_data = enc.encrypt_string(&test_data);
+        let decrypted_data = enc.decrypt_vec(encrypted_data);
+        assert_eq!(test_data, decrypted_data)
+    }
+}
