@@ -47,3 +47,26 @@ impl Tokenizer for Blake3Tokenizer {
         hex_digest.to_string()
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::tokenizer::Tokenizer;
+    use crate::tokenizer::Blake3Tokenizer;
+    use credit_card::CreditCard;
+
+    #[test]
+    fn test_blake3_tokenization() {
+        let cc = CreditCard {
+           number: "4111111111111111".to_string(),
+           cardholder_name: "Graydon Hoare".to_string(),
+           expiration_month: "01".to_string(),
+           expiration_year: "2023".to_string(),
+           brand: None,
+           security_code: None
+        };
+
+        let tokenizer = Blake3Tokenizer::new();
+        let token = tokenizer.generate(&cc);
+        assert_eq!(token.len(), 64)
+    }
+}
