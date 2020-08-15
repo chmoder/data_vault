@@ -20,12 +20,11 @@ use std::error;
 ///
 /// # Examples
 /// ```rust
-/// use data_vault::{RedisDataVault, DataVault};
-/// let data_vault = RedisDataVault::new();
+/// use data_vault::{DataVault, RedisDataVault};
+/// use data_vault::encryption::AesGcmSivEncryption;
+/// use data_vault::tokenizer::Blake3Tokenizer;
+/// let data_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
 /// ```
-///
-/// # Panics
-/// Will panic when connection can not be made
 pub struct RedisDataVault<E, T> {
     pool: deadpool_redis::Pool,
     encryption: E,
@@ -41,10 +40,10 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     /// Create new RedisDataVault backend
     /// # examples
     /// ```rust
-    /// use data_vault::DataVault;
-    /// use data_vault::RedisDataVault;
-    ///
-    /// let rdv = RedisDataVault::new();
+    /// use data_vault::{DataVault, RedisDataVault};
+    /// use data_vault::encryption::AesGcmSivEncryption;
+    /// use data_vault::tokenizer::Blake3Tokenizer;
+    /// let data_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
     /// ```
     fn new() -> Result<Self, Box<dyn error::Error>> {
         let cfg = DeadpoolRedisConfig::from_env()?;
@@ -67,13 +66,14 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     ///     the token as String
     /// # example
     /// ```rust
-    /// use data_vault::DataVault;
-    /// use data_vault::RedisDataVault;
+    /// use data_vault::{DataVault, RedisDataVault};
+    /// use data_vault::encryption::AesGcmSivEncryption;
+    /// use data_vault::tokenizer::Blake3Tokenizer;
     ///
     /// let token = String::from("abc123");
     /// let credit_card_string = String::from("{number: 123}");
-    /// let rdv = RedisDataVault::new();
-    /// rdv.store(&token, &credit_card_string);
+    /// let data_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
+    /// data_vault.store(&token, &credit_card_string);
     /// ```
     async fn store(&self, token: &String, string: &String) -> Result<(), PoolError> {
         let mut conn = self.pool.get().await?;
@@ -89,8 +89,9 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     ///     A new token as String
     /// # example
     /// ```rust
-    /// use data_vault::DataVault;
-    /// use data_vault::RedisDataVault;
+    /// use data_vault::{DataVault, RedisDataVault};
+    /// use data_vault::encryption::AesGcmSivEncryption;
+    /// use data_vault::tokenizer::Blake3Tokenizer;
     /// use credit_card::CreditCard;
     ///
     /// let cc = CreditCard {
@@ -102,8 +103,8 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     ///    security_code: None
     /// };
     ///
-    /// let rdv = RedisDataVault::new();
-    /// let token = rdv.store_credit_card(&cc);
+    /// let data_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
+    /// let token = data_vault.store_credit_card(&cc);
     /// ```
     async fn store_credit_card(&self, credit_card: &CreditCard) -> Result<String, PoolError> {
         let token = self.tokenizer.generate(&credit_card);
@@ -121,12 +122,14 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     /// ```rust,ignore
     /// use data_vault::DataVault;
     /// use data_vault::RedisDataVault;
+    /// use data_vault::encryption::AesGcmSivEncryption;
+    /// use data_vault::tokenizer::Blake3Tokenizer;
     ///
     /// let token = String::from("abc123");
     /// let cc_string = String::from("{number: 123}");
-    /// let rdv = RedisDataVault::new();
-    /// rdv.store(&token, &cc_string).await;
-    /// let credit_card_string = rdv.retrieve(&token)
+    /// let data_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
+    /// data_vault.store(&token, &cc_string).await;
+    /// let credit_card_string = data_vault.retrieve(&token)
     /// ```
     async fn retrieve(&self, token: &String) -> Result<String, PoolError> {
         let mut conn = self.pool.get().await?;
@@ -143,6 +146,8 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     /// ```rust,ignore
     /// use data_vault::DataVault;
     /// use data_vault::RedisDataVault;
+    /// use data_vault::encryption::AesGcmSivEncryption;
+    /// use data_vault::tokenizer::Blake3Tokenizer;
     /// use credit_card::CreditCard;
     ///
     /// let cc = CreditCard {
@@ -154,9 +159,9 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     ///    security_code: None
     /// };
     ///
-    /// let rdv = RedisDataVault::new();
-    /// let token = rdv.store_credit_card(&cc).await;
-    /// let credit_card = rdv.retrieve_credit_card(&token).await;
+    /// let data_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
+    /// let token = data_vault.store_credit_card(&cc).await;
+    /// let credit_card = data_vault.retrieve_credit_card(&token).await;
     /// ```
     async fn retrieve_credit_card(&self, token: &String) -> Result<CreditCard, PoolError> {
         let credit_card_json = self.retrieve(token).await?;

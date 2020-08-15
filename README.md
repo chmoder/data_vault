@@ -16,10 +16,21 @@ data_vault = "^0.1"
 ```
 
 ```rust,norun
-use credit_card::CreditCard;
-use data_vault::{RedisDataVault, DataVault};
+# traits
+use crate::traits::DataVault;
+use crate::encryption::traits::Encryption;
 
-let vault = RedisDataVault::new();
+# data vault
+use crate::redis_data_vault::RedisDataVault;
+# swappable encryption
+use crate::encryption::AesGcmSivEncryption;
+# swappable tokenizer
+use crate::tokenizer::Blake3Tokenizer;
+
+# credit card type
+use credit_card::CreditCard;
+
+let vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
 
 let cc = CreditCard {
     number: "4111111111111111".to_string(),
@@ -30,8 +41,8 @@ let cc = CreditCard {
     security_code: None
 };
 
-let token = vault.store_credit_card(&cc).await;
-let credit_card = vault.retrieve_credit_card(&token).await;
+let token = vault.store_credit_card(&cc).await.unwrap();
+let credit_card = vault.retrieve_credit_card(&token.to_string()).await.unwrap();
 assert_eq!(credit_card.number, cc.number)
 ```
 

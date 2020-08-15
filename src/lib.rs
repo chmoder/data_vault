@@ -51,10 +51,11 @@ mod tests {
     use crate::redis_data_vault::RedisDataVault;
     use crate::encryption::traits::Encryption;
     use crate::encryption::AesGcmSivEncryption;
+    use crate::tokenizer::Blake3Tokenizer;
 
     #[tokio::test]
     async fn store_retrieve() {
-        let vault = RedisDataVault::<AesGcmSivEncryption>::new().unwrap();
+        let vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
 
         let cc = CreditCard {
             number: "4111111111111111".to_string(),
