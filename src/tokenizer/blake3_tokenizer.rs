@@ -1,5 +1,6 @@
 use credit_card::CreditCard;
 use crate::tokenizer::{Tokenizer};
+use crate::utils::Salt;
 
 pub struct Blake3Tokenizer;
 impl Tokenizer for Blake3Tokenizer {
@@ -28,8 +29,8 @@ impl Tokenizer for Blake3Tokenizer {
     /// let token = tokenizer.generate(&cc);
     ///
     /// ```
-    fn generate(self: &Self, credit_card: &CreditCard) -> String {
-        let salt = Self::generate_salt(32);
+    fn generate(&self, credit_card: &CreditCard) -> String {
+        let salt = Salt::generate(32);
 
         let security_code = credit_card.security_code.clone();
 
