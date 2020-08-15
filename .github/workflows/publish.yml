@@ -20,16 +20,16 @@ jobs:
         include:
           - name: linux
             os: ubuntu-latest
-            artifact_name: <name>
-            asset_name: <name>-linux
+            artifact_name: data_vault
+            asset_name: data_vault_linux
           - name: windows
             os: windows-latest
-            artifact_name: <name>.exe
-            asset_name: <name>-windows
+            artifact_name: data_vault.exe
+            asset_name: data_vault_windows
           - name: macos
             os: macos-latest
-            artifact_name: <name>
-            asset_name: <name>-macos
+            artifact_name: data_vault
+            asset_name: data_vault_macos
 
     steps:
       - uses: actions/checkout@v1
