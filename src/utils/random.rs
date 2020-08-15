@@ -20,3 +20,14 @@ impl Salt {
             .collect()
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::utils::Salt;
+
+    #[test]
+    fn test_salt_generate() {
+        let salt = Salt::generate(12);
+        assert_eq!(salt.len(), 12)
+    }
+}
