@@ -5,13 +5,14 @@ use data_vault::{RedisDataVault, DataVault};
 use std::vec;
 use std::time::{Instant};
 use std::sync::Arc;
+use data_vault::encryption::AesGcmSivEncryption;
 
 #[tokio::main(core_threads = 4)]
 async fn main() {
     env_logger::init();
 
     let mut token_futures = vec::Vec::new();
-    let vault = Arc::new(RedisDataVault::new());
+    let vault = Arc::new(RedisDataVault::<AesGcmSivEncryption>::new().unwrap());
     let cc = Arc::new(CreditCard {
         number: "4111111111111111".to_string(),
         cardholder_name: "Graydon Hoare".to_string(),
@@ -40,8 +41,9 @@ async fn main() {
     info!("tokenized and stored {} credit cards in {:?}", to_store, stored_time.duration_since(start_time));
 
     for token_result in results {
-        let token = token_result.unwrap();
-        vault.retrieve_credit_card(&token).await;
+        let redis_result = token_result.unwrap();
+        let token = redis_result.unwrap();
+        let _credit_card = vault.retrieve_credit_card(&token).await.unwrap();
     }
 
     let end_time = Instant::now();
