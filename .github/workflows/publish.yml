@@ -12,9 +12,9 @@ jobs:
     strategy:
       matrix:
         name: [
-          linux,
-          windows,
-          macos
+          linux
+#          windows,
+#          macos
         ]
 
         include:
@@ -51,5 +51,6 @@ jobs:
           tag: ${{ github.ref }}
 
       - name: Publish crate to crates.io
+        if: ${{ matrix.artifact_name }} == 'linux'
         run: |
           cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
