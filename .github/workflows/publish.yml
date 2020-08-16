@@ -38,11 +38,6 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-      
-      - name: Upload crate to crates.io
-        env:
-          CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
-        run: cargo publish
 
       - name: Package
         run: cargo build --release
@@ -54,3 +49,7 @@ jobs:
           file: target/release/${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
+
+      - name: Publish crate to crates.io
+        run: |
+          cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
