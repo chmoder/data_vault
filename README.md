@@ -41,7 +41,10 @@ use data_vault::tokenizer::Blake3Tokenizer;
 // credit card type
 use credit_card::CreditCard;
 
-fn main() {
+use tokio;
+
+#[tokio::main(core_threads = 4)]
+async fn main() {
     let vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
     
     let cc = CreditCard {
