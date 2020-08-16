@@ -31,9 +31,6 @@ jobs:
             artifact_name: libdata_vault.rlib
             asset_name: data_vault_macos
 
-    env:
-      CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
-
     steps:
       - uses: actions/checkout@v1
 
@@ -41,6 +38,11 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
+      
+      - name: Upload crate to crates.io
+        env:
+          CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+        run: cargo publish
 
       - name: Package
         run: cargo build --release
@@ -52,6 +54,3 @@ jobs:
           file: target/release/${{ matrix.artifact_name }}
           asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
-
-      - name: Upload crate to crates.io
-          run: cargo publish
