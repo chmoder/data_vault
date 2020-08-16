@@ -50,7 +50,8 @@ jobs:
           asset_name: ${{ matrix.asset_name }}
           tag: ${{ github.ref }}
 
-      - name: Publish crate to crates.io
-        if: ${{ matrix.artifact_name }} == 'linux'
+      - if: matrix.artifact_name == 'linux'
+        name: Publish crate to crates.io
         run: |
           cargo publish --token ${{ secrets.CRATES_IO_TOKEN }}
+
