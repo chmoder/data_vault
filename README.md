@@ -5,7 +5,7 @@ Data Vault is a library for storing and retrieving Credit Card data via Tokens.
 
 [![Actions Status](https://github.com/chmoder/data_vault/workflows/Rust/badge.svg)](https://github.com/chmoder/data_vault/actions)
 [![codecov](https://codecov.io/gh/chmoder/data_vault/branch/master/graph/badge.svg)](https://codecov.io/gh/chmoder/data_vault)
-[![crates.io](https://meritbadge.herokuapp.com/data_vault)](https://crates.io/crates/data_vault)
+[![Crates.io](https://img.shields.io/crates/v/data_vault)](https://crates.io/crates/data_vault)
 [![Documentation](https://docs.rs/data_vault/badge.svg)](https://docs.rs/data_vault)
 [![License](https://img.shields.io/crates/l/data_vault.svg)](https://img.shields.io/crates/l/data_vault.svg)
 
