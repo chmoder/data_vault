@@ -33,9 +33,9 @@ use data_vault::encryption::traits::Encryption;
 
 // data vault
 use data_vault::RedisDataVault;
-// swappable encryption
+// Interchangable encryption
 use data_vault::encryption::AesGcmSivEncryption;
-// swappable tokenizer
+// Interchangable tokenizer
 use data_vault::tokenizer::Blake3Tokenizer;
 
 // credit card type
@@ -69,8 +69,8 @@ async fn main() {
 - Blake3 tokenization
 - Redis Server, URL connection configuration
 - Configurable from .env file or Environment Variables
-- Swappable Encryption
-- Swappable Tokenization hasher
+- Interchangable Encryption
+- Interchangable Tokenization hasher
 
 # Future Features
 - Postgres Database
