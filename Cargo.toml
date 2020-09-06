@@ -31,6 +31,9 @@ log = "^0.4"
 futures = "^0.3"
 tokio = { version = "^0.2", features = ["full"] }
 
+[lib]
+bench = false
+
 [profile.release]
 lto = true
 opt-level = 3
