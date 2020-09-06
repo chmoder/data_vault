@@ -38,7 +38,7 @@ jobs:
       - name: Upload benchmarks
         run: |
           find $(find . -type d -name criterion.dev.temp) -name raw.csv && \
-          curl -F "raw.csv=@find $(find . -type d -name criterion.dev.temp) -name raw.csv" \
+          curl -F "raw.csv=@$(find $(find . -type d -name criterion.dev.temp) -name raw.csv)" \
           -H "Content-Type: multipart/form-data"
           https://api.criterion.com/${{ github.repository }}/measurements?token=${{ secrets.CRITERION_TOKEN }}
       - name: Install tarpaulin
