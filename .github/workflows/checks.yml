@@ -31,8 +31,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Build
         run: cargo build --release --verbose
-#       - name: Run tests
-#         run: cargo test --release --verbose
+      - name: Run tests
+        run: cargo test --release --verbose
       - name: Run benchmarks
         run: cargo bench -- --verbose --noplot --save-baseline criterion.dev.temp
       - name: Upload benchmarks
@@ -40,7 +40,7 @@ jobs:
           find $(find . -type d -name criterion.dev.temp) -name raw.csv && \
           curl -F "raw.csv=@$(find $(find . -type d -name criterion.dev.temp) -name raw.csv)" \
           -H "Content-Type: multipart/form-data" \
-          https://api.criterion.dev/${{ github.repository }}/measurements?token=${{ secrets.CRITERION_TOKEN }}
+          https://api.criterion.dev/v1/${{ github.repository }}/measurements?token=${{ secrets.CRITERION_TOKEN }}
       - name: Install tarpaulin
         run: cargo install cargo-tarpaulin
       - name: Run tarpaulin
