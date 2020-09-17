@@ -21,6 +21,7 @@ jobs:
       ENCRYPTED_DATA_VAULT_KEY: 000102030405060708090a0b0c0d0e0f
       ENCRYPTED_DATA_VAULT_IV: f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      CRITERION_TOKEN: ${{ secrets.CRITERION_TOKEN }}
 
     steps:
       - name: Start Redis
@@ -42,6 +43,8 @@ jobs:
           echo "::set-env name=CRITERION_FILE_PATH::$(find $(find . -type d -name criterion.dev.temp) -name raw.csv)"
       - name: Upload benchmarks
         run: |
+          echo ${{ env.CRITERION_FILE_PATH }}
+          echo 'https://api.criterion.dev/v1/${{ github.repository }}/measurements?token=${{ secrets.CRITERION_TOKEN }}&commit=${{ github.sha }}'
           # upload the file
           curl -F 'raw.csv=@${{ env.CRITERION_FILE_PATH }}' \
           'https://api.criterion.dev/v1/${{ github.repository }}/measurements?token=${{ secrets.CRITERION_TOKEN }}&commit=${{ github.sha }}'
