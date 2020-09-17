@@ -38,7 +38,7 @@ jobs:
           cargo bench -- --verbose --noplot --save-baseline criterion.dev.temp
 
           # set the path to the file to upload to criterion.dev
-          ::set-env name=CRITERION_FILE_PATH::$(find $(find . -type d -name criterion.dev.temp) -name raw.csv)
+          echo ::set-env name=CRITERION_FILE_PATH::$(find $(find . -type d -name criterion.dev.temp) -name raw.csv)
       - name: Upload benchmarks
         run: |
           # run benchmarks and save baseline to "criterion.dev.temp"
