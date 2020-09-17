@@ -41,10 +41,10 @@ jobs:
           cargo bench -- --verbose --noplot --save-baseline criterion.dev.temp
 
           # get the path to the file to upload to criterion.dev
-          CRITERION_FILE_PATH=$(find $(find . -type d -name criterion.dev.temp) -name raw.csv)
+          ::set-env name=UPLOAD_FILE_PATH::$(find $(find . -type d -name criterion.dev.temp) -name raw.csv)
 
           # upload the file
-          curl -F 'raw.csv=@$CRITERION_FILE_PATH' \
+          curl -F 'raw.csv=@${{ UPLOAD_FILE_PATH }}' \
           'https://api.criterion.dev/v1/${{ github.repository }}/measurements?token=${{ secrets.CRITERION_TOKEN }}&commit=${{ github.sha }}'
 #      - name: Install tarpaulin
 #        run: cargo install cargo-tarpaulin
