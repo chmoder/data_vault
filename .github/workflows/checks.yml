@@ -11,7 +11,7 @@ env:
 
 jobs:
   build:
-    name: Run checks for Redis version ${{ matrix.redis-version }}
+    name: Run checks for DataVault with Redis version ${{ matrix.redis-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -30,10 +30,10 @@ jobs:
           redis-version: ${{ matrix.redis-version }}
       - name: Checkout Data Vault
         uses: actions/checkout@v2
-#      - name: Build
-#        run: cargo build --release --verbose
-#      - name: Run tests
-#        run: cargo test --verbose
+      - name: Build
+        run: cargo build --release --verbose
+      - name: Run tests
+        run: cargo test --verbose
       - name: Run benchmarks
         run: |
           # run benchmarks and save baseline to "criterion.dev.temp"
@@ -43,17 +43,15 @@ jobs:
           echo "::set-env name=CRITERION_FILE_PATH::$(find $(find . -type d -name criterion.dev.temp) -name raw.csv)"
       - name: Upload benchmarks
         run: |
-          echo ${{ env.CRITERION_FILE_PATH }}
-          echo 'https://api.criterion.dev/v1/${{ github.repository }}/measurements?token=${{ secrets.CRITERION_TOKEN }}&commit=${{ github.sha }}'
           # upload the file
           curl -F 'raw.csv=@${{ env.CRITERION_FILE_PATH }}' \
           'https://api.criterion.dev/v1/${{ github.repository }}/measurements?token=${{ secrets.CRITERION_TOKEN }}&commit=${{ github.sha }}'
-#      - name: Install tarpaulin
-#        run: cargo install cargo-tarpaulin
-#      - name: Run tarpaulin
-#        run: cargo tarpaulin --out Xml
-#      - name: Upload CodeCov Report
-#        uses: codecov/codecov-action@v1
-#        with:
-#          token: ${{ secrets.CODECOV_TOKEN }}
-#          fail_ci_if_error: true
+      - name: Install tarpaulin
+        run: cargo install cargo-tarpaulin
+      - name: Run tarpaulin
+        run: cargo tarpaulin --out Xml
+      - name: Upload CodeCov Report
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
