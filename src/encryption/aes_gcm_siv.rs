@@ -94,6 +94,10 @@ impl Encryption for AesGcmSivEncryption {
     /// let encrypted_data = enc.decrypt_vec(test_data);
     /// ```
     fn decrypt(&self, bytes: &[u8]) -> String {
+        if bytes.get(12).is_none() {
+            return String::from("")
+        }
+
         let (nonce_bytes, cipher_bytes) = bytes.split_at(12);
         let nonce = GenericArray::from_slice(nonce_bytes);
         let decrypt_vec = self.cipher.decrypt(nonce, cipher_bytes).unwrap();
