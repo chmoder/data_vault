@@ -43,24 +43,27 @@ async fn store_credit_card() {
 
 #[tokio::main]
 async fn retrieve_credit_card() {
-    let token = "token";
     let vault = RedisDataVault::<AesGcmSivEncryption,Blake3Tokenizer>::new().unwrap();
-    let credit_card = vault.retrieve_credit_card(&token.to_string()).await.unwrap();
 
-    let cc = CreditCard {
-        number: "4111111111111111".to_string(),
-        cardholder_name: "Graydon Hoare".to_string(),
-        expiration_month: "01".to_string(),
-        expiration_year: "2023".to_string(),
-        brand: None,
-        security_code: None
-    };
+    let token = "token";
+    let mut credit_card = vault.retrieve_credit_card(&token.to_string()).await.unwrap();
 
     if credit_card.number.len() == 0 {
-        let _ = vault.store_credit_card(&cc).await.unwrap();
+        let cc = CreditCard {
+            number: "4111111111111111".to_string(),
+            cardholder_name: "Graydon Hoare".to_string(),
+            expiration_month: "01".to_string(),
+            expiration_year: "2023".to_string(),
+            brand: None,
+            security_code: None
+        };
+
+        let credit_card_json = serde_json::to_string(&cc).unwrap();
+        let _ = vault.store(&token.to_string(), &credit_card_json).await.unwrap();
+        credit_card = vault.retrieve_credit_card(&token.to_string()).await.unwrap();
     }
 
-    assert_eq!(credit_card.number, cc.number)
+    assert_eq!(credit_card.number, "4111111111111111".to_string())
 }
 
 fn criterion_store_credit_card(c: &mut Criterion) {
@@ -76,10 +79,5 @@ fn criterion_store_retrieve_credit_card(c: &mut Criterion) {
 }
 
 
-criterion_group! {
-    name = benches;
-    config = Criterion::default().sample_size(10).nresamples(2000).measurement_time(Duration::new(5, 0));
-    targets = criterion_store_retrieve_credit_card
-    //criterion_store, criterion_retrieve
-}
+criterion_group!(benches, criterion_store_credit_card, criterion_retrieve_credit_card, criterion_store_retrieve_credit_card );
 criterion_main!(benches);
