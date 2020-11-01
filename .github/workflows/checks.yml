@@ -36,7 +36,7 @@ jobs:
         run: cargo test --verbose
       - name: Run benchmarks
         run: |
-          # run benchmarks and save baseline to "criterion.dev.temp"
+          # run benchmarks and save baseline in a directory called "new"
           cargo bench -- --verbose --noplot
       - name: Upload benchmarks
         run: |
