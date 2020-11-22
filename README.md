@@ -32,11 +32,11 @@ ENCRYPTED_DATA_VAULT_IV=f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
 use data_vault::DataVault;
 use data_vault::encryption::traits::Encryption;
 
-// data vault
+// Interchangeable backend
 use data_vault::RedisDataVault;
-// Interchangable encryption
+// Interchangeable encryption
 use data_vault::encryption::AesGcmSivEncryption;
-// Interchangable tokenizer
+// Interchangeable tokenizer
 use data_vault::tokenizer::Blake3Tokenizer;
 
 // credit card type
@@ -70,8 +70,8 @@ async fn main() {
 - Blake3 tokenization
 - Redis Server, URL connection configuration
 - Configurable from .env file or Environment Variables
-- Interchangable Encryption
-- Interchangable Tokenization hasher
+- Interchangeable Encryption
+- Interchangeable Tokenization hasher
 
 # Future Features
 - Postgres Database
