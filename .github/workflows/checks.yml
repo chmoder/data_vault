@@ -52,14 +52,14 @@ jobs:
 #        with:
 #          redis-version: ${{ matrix.redis-version }}
       - name: Set up PostgreSQL
-          # Runs a script that creates a PostgreSQL client, populates
-          # the client with data, and retrieves data
-          run: |
-            sudo apt update && sudo apt install postgresql-client-12 &&
-            psql -h postgres -U postgres -d postgres "CREATE TABLE public.data_vault (id bigserial NOT NULL DEFAULT nextval('data_vault_id_seq'::regclass), \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
-            psql -h postgres -U postgres -d postgres "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
-          env:
-            PGPASSWORD: postgres
+        # Runs a script that creates a PostgreSQL client, populates
+        # the client with data, and retrieves data
+        run: |
+          sudo apt update && sudo apt install postgresql-client-12 &&
+          psql -h postgres -U postgres -d postgres "CREATE TABLE public.data_vault (id bigserial NOT NULL DEFAULT nextval('data_vault_id_seq'::regclass), \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
+          psql -h postgres -U postgres -d postgres "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
+        env:
+          PGPASSWORD: postgres
 
 #      - name: Checkout Data Vault
 #        uses: actions/checkout@v2
