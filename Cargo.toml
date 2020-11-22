@@ -43,6 +43,3 @@ codegen-units = 1
 [[bench]]
 name = "data_vault_benchmark"
 harness = false
-
-[[example]]
-name = "benchmark"
