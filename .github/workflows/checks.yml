@@ -56,8 +56,9 @@ jobs:
         # the client with data, and retrieves data
         run: |
           sudo apt update && sudo apt install -y postgresql-client-12 &&
-          psql -h postgres -U postgres -d data_vault -c "CREATE TABLE public.data_vault (id bigserial NOT NULL DEFAULT nextval('data_vault_id_seq'::regclass), \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
-          psql -h postgres -U postgres -d data_vault -c "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
+          docker run -it --network network postgres psql -h postgres -U postgres &&
+          docker run -it --network network postgres psql -h postgres -U postgres -d data_vault -c "CREATE TABLE public.data_vault (id bigserial NOT NULL DEFAULT nextval('data_vault_id_seq'::regclass), \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
+          docker run -it --network network postgres psql -h postgres -U postgres -d data_vault -c "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
         env:
           PGPASSWORD: postgres
           POSTGRES_HOST: postgres
