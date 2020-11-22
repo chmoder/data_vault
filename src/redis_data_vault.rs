@@ -1,11 +1,10 @@
 use async_trait::async_trait;
 use credit_card::CreditCard;
 use deadpool_redis::redis::{AsyncCommands};
-use crate::traits::{DataVault};
+use crate::traits::{DataVault, PoolErrors};
 use crate::config::DeadpoolRedisConfig;
 use crate::encryption::traits::Encryption;
 use crate::tokenizer::{Tokenizer};
-use deadpool_redis::PoolError;
 use std::error;
 
 /// Use redis as a data vault back end
@@ -75,10 +74,10 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     /// let data_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
     /// data_vault.store(&token, &credit_card_string);
     /// ```
-    async fn store(&self, token: &String, string: &String) -> Result<(), PoolError> {
+    async fn store(&self, token: &String, string: &String) -> Result<(), PoolErrors> {
         let mut conn = self.pool.get().await?;
         let encrypted_json = self.encryption.encrypt(string.as_bytes());
-        let _:() = conn.set(token, encrypted_json).await?;
+        let _:() = conn.set(token, encrypted_json).await.unwrap();
         Ok(())
     }
 
@@ -106,7 +105,7 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     /// let data_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
     /// let token = data_vault.store_credit_card(&cc);
     /// ```
-    async fn store_credit_card(&self, credit_card: &CreditCard) -> Result<String, PoolError> {
+    async fn store_credit_card(&self, credit_card: &CreditCard) -> Result<String, PoolErrors> {
         let token = self.tokenizer.generate(&credit_card);
         let credit_card_json = serde_json::to_string(&credit_card).unwrap();
         let _:() = self.store(&token, &credit_card_json).await?;
@@ -131,9 +130,9 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     /// data_vault.store(&token, &cc_string).await;
     /// let credit_card_string = data_vault.retrieve(&token)
     /// ```
-    async fn retrieve(&self, token: &String) -> Result<String, PoolError> {
+    async fn retrieve(&self, token: &String) -> Result<String, PoolErrors> {
         let mut conn = self.pool.get().await?;
-        let encrypted_credit_card_json: Vec<u8> = conn.get(token).await?;
+        let encrypted_credit_card_json: Vec<u8> = conn.get(token).await.unwrap();
         Ok(self.encryption.decrypt(encrypted_credit_card_json.as_slice()))
     }
 
@@ -163,7 +162,7 @@ impl<E, T> DataVault for RedisDataVault<E, T>
     /// let token = data_vault.store_credit_card(&cc).await;
     /// let credit_card = data_vault.retrieve_credit_card(&token).await;
     /// ```
-    async fn retrieve_credit_card(&self, token: &String) -> Result<CreditCard, PoolError> {
+    async fn retrieve_credit_card(&self, token: &String) -> Result<CreditCard, PoolErrors> {
         let credit_card_json = self.retrieve(token).await?;
         Ok(serde_json::from_str(&credit_card_json).unwrap_or_default())
     }
