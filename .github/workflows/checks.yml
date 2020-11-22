@@ -23,7 +23,7 @@ jobs:
       POSTGRES.HOST: postgres
       POSTGRES.USER: postgres
       POSTGRES.PASSWORD: postgres
-      POSTGRES.DBNAME: postgres
+      POSTGRES.DBNAME: data_vault
       POSTGRES.POOL.MAX_SIZE: 16
       POSTGRES.POOLTIMEOUTS_WAIT_SECS: 5
       POSTGRES.POOL.TIMEOUTS_WAIT_NANOS: 0
@@ -56,8 +56,8 @@ jobs:
         # the client with data, and retrieves data
         run: |
           sudo apt update && sudo apt install postgresql-client-12 &&
-          psql -h postgres -U postgres -d postgres "CREATE TABLE public.data_vault (id bigserial NOT NULL DEFAULT nextval('data_vault_id_seq'::regclass), \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
-          psql -h postgres -U postgres -d postgres "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
+          psql -h postgres -U postgres -d data_vault -c "CREATE TABLE public.data_vault (id bigserial NOT NULL DEFAULT nextval('data_vault_id_seq'::regclass), \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
+          psql -h postgres -U postgres -d data_vault -c "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
         env:
           PGPASSWORD: postgres
 
