@@ -14,7 +14,7 @@ Data Vault is a library for storing and retrieving Credit Card data via Tokens.
 ```toml
 # Cargo.toml
 [dependencies]
-data_vault = "^0.2"
+data_vault = "^0.3"
 ```
 
 ```dotenv
