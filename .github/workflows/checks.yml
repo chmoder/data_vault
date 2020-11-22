@@ -20,14 +20,46 @@ jobs:
       REDIS_URL: redis://@127.0.0.1/
       ENCRYPTED_DATA_VAULT_KEY: 000102030405060708090a0b0c0d0e0f
       ENCRYPTED_DATA_VAULT_IV: f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
+      POSTGRES.HOST: localhost
+      POSTGRES.USER: postgres
+      POSTGRES.PASSWORD: postgres
+      POSTGRES.DBNAME: data_vault
+      POSTGRES.POOL.MAX_SIZE: 16
+      POSTGRES.POOLTIMEOUTS_WAIT_SECS: 5
+      POSTGRES.POOL.TIMEOUTS_WAIT_NANOS: 0
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CRITERION_TOKEN: ${{ secrets.CRITERION_TOKEN }}
+
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: data_vault
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Start Redis
         uses: supercharge/redis-github-action@1.1.0
         with:
           redis-version: ${{ matrix.redis-version }}
+      - name: Set Up PostgreSQL Schema
+        # Runs a script that creates a PostgreSQL client, populates
+        # the client with data, and retrieves data
+        run: |
+          sudo apt update && sudo apt install -y postgresql-client-12 &&
+          docker ps &&
+          docker network ls &&
+          psql -h localhost -U postgres -d data_vault -c "CREATE TABLE public.data_vault (id bigserial NOT NULL PRIMARY KEY, \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
+          psql -h localhost -U postgres -d data_vault -c "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
       - name: Checkout Data Vault
         uses: actions/checkout@v2
       - name: Build
