@@ -60,6 +60,11 @@ jobs:
           psql -h postgres -U postgres -d data_vault -c "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
         env:
           PGPASSWORD: postgres
+          POSTGRES_HOST: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: data_vault
+          POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
 
 #      - name: Checkout Data Vault
 #        uses: actions/checkout@v2
