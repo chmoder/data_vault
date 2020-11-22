@@ -8,7 +8,7 @@ use std::sync::Arc;
 use data_vault::encryption::AesGcmSivEncryption;
 use data_vault::tokenizer::Blake3Tokenizer;
 
-#[tokio::main(core_threads = 4)]
+#[tokio::main(flavor = "multi_thread", worker_threads = 24)]
 async fn main() {
     env_logger::init();
 
@@ -24,8 +24,8 @@ async fn main() {
         security_code: None
     });
 
-    let to_store:i32 = 100000;
-    info!("start");
+    let to_store:i32 = 1000;
+    println!("start");
     let start_time = Instant::now();
 
     for _ in 0..to_store {
@@ -40,15 +40,15 @@ async fn main() {
     let results = futures::future::join_all(token_futures).await;
 
     let stored_time = Instant::now();
-    info!("tokenized and stored {} credit cards in {:?}", to_store, stored_time.duration_since(start_time));
+    println!("tokenized and stored {} credit cards in {:?}", to_store, stored_time.duration_since(start_time));
 
     for token_result in results {
-        let redis_result = token_result.unwrap();
-        let token = redis_result.unwrap();
+        let token_result = token_result.unwrap();
+        let token = token_result.unwrap();
         let _credit_card = vault.retrieve_credit_card(&token).await.unwrap();
     }
 
     let end_time = Instant::now();
-    info!("retrieved {} credit cards in {:?}", to_store, end_time.duration_since(stored_time));
-    info!("tokenized, stored, and retrieved {} credit cards in {:?}", to_store, end_time.duration_since(start_time));
+    println!("retrieved {} credit cards in {:?}", to_store, end_time.duration_since(stored_time));
+    println!("tokenized, stored, and retrieved {} credit cards in {:?}", to_store, end_time.duration_since(start_time));
 }
