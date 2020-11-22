@@ -25,9 +25,10 @@
 //!
 //! // data vault
 //! use data_vault::RedisDataVault;
-//! // Interchangable encryption
+//! use data_vault::PostgresDataVault;
+//! // Interchangeable encryption
 //! use data_vault::encryption::AesGcmSivEncryption;
-//! // Interchangable tokenizer
+//! // Interchangeable tokenizer
 //! use data_vault::tokenizer::Blake3Tokenizer;
 //!
 //! // credit card type
@@ -61,8 +62,8 @@
 //! - Blake3 tokenization
 //! - Redis Server, URL connection configuration
 //! - Configurable from .env file or Environment Variables
-//! - Interchangable Encryption
-//! - Interchangable Tokenization hasher
+//! - Interchangeable Encryption
+//! - Interchangeable Tokenization hasher
 //!
 //! # Future Features
 //! - Postgres Database
@@ -78,6 +79,7 @@
 
 mod traits;
 mod redis_data_vault;
+mod postgres_data_vault;
 mod config;
 pub mod utils;
 pub mod encryption;
@@ -85,6 +87,7 @@ pub mod tokenizer;
 
 pub use traits::DataVault;
 pub use redis_data_vault::RedisDataVault;
+pub use postgres_data_vault::PostgresDataVault;
 
 
 #[cfg(test)]
@@ -95,10 +98,29 @@ mod tests {
     use crate::encryption::traits::Encryption;
     use crate::encryption::AesGcmSivEncryption;
     use crate::tokenizer::Blake3Tokenizer;
+    use crate::PostgresDataVault;
 
-    #[tokio::test]
-    async fn store_retrieve() {
+    #[tokio::test(flavor = "multi_thread")]
+    async fn store_retrieve_redis() {
         let vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
+
+        let cc = CreditCard {
+            number: "4111111111111111".to_string(),
+            cardholder_name: "Graydon Hoare".to_string(),
+            expiration_month: "01".to_string(),
+            expiration_year: "2023".to_string(),
+            brand: None,
+            security_code: None
+        };
+
+        let token = vault.store_credit_card(&cc).await.unwrap();
+        let credit_card = vault.retrieve_credit_card(&token.to_string()).await.unwrap();
+        assert_eq!(credit_card.number, cc.number)
+    }
+
+    #[tokio::test(flavor = "multi_thread")]
+    async fn store_retrieve_postgres() {
+        let vault = PostgresDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
 
         let cc = CreditCard {
             number: "4111111111111111".to_string(),
