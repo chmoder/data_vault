@@ -20,34 +20,67 @@ jobs:
       REDIS_URL: redis://@127.0.0.1/
       ENCRYPTED_DATA_VAULT_KEY: 000102030405060708090a0b0c0d0e0f
       ENCRYPTED_DATA_VAULT_IV: f0f1f2f3f4f5f6f7f8f9fafbfcfdfeff
+      POSTGRES.HOST: postgres
+      POSTGRES.USER: postgres
+      POSTGRES.PASSWORD: postgres
+      POSTGRES.DBNAME: postgres
+      POSTGRES.POOL.MAX_SIZE: 16
+      POSTGRES.POOLTIMEOUTS_WAIT_SECS: 5
+      POSTGRES.POOL.TIMEOUTS_WAIT_NANOS: 0
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       CRITERION_TOKEN: ${{ secrets.CRITERION_TOKEN }}
 
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_HOST: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: data_vault
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-      - name: Start Redis
-        uses: supercharge/redis-github-action@1.1.0
-        with:
-          redis-version: ${{ matrix.redis-version }}
-      - name: Checkout Data Vault
-        uses: actions/checkout@v2
-      - name: Build
-        run: cargo build --release --verbose
-      - name: Run tests
-        run: cargo test --verbose
-      - name: Run benchmarks
-        run: |
-          # run benchmarks and save baseline in a directory called "new"
-          cargo bench -- --verbose --noplot
-      - name: Upload benchmarks
-        run: |
-          # upload the files
-          bash <(curl -s https://criterion.dev/bash)
-      - name: Install tarpaulin
-        run: cargo install cargo-tarpaulin
-      - name: Run tarpaulin
-        run: cargo tarpaulin --out Xml
-      - name: Upload CodeCov Report
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
+#      - name: Start Redis
+#        uses: supercharge/redis-github-action@1.1.0
+#        with:
+#          redis-version: ${{ matrix.redis-version }}
+      - name: Set up PostgreSQL
+          # Runs a script that creates a PostgreSQL client, populates
+          # the client with data, and retrieves data
+          run: |
+            sudo apt update && sudo apt install postgresql-client-12 &&
+            psql -h postgres -U postgres -d postgres "CREATE TABLE public.data_vault (id bigserial NOT NULL DEFAULT nextval('data_vault_id_seq'::regclass), \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
+            psql -h postgres -U postgres -d postgres "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
+          env:
+            PGPASSWORD: postgres
+
+#      - name: Checkout Data Vault
+#        uses: actions/checkout@v2
+#      - name: Build
+#        run: cargo build --release --verbose
+#      - name: Run tests
+#        run: cargo test --verbose
+#      - name: Run benchmarks
+#        run: |
+#          # run benchmarks and save baseline in a directory called "new"
+#          cargo bench -- --verbose --noplot
+#      - name: Upload benchmarks
+#        run: |
+#          # upload the files
+#          bash <(curl -s https://criterion.dev/bash)
+#      - name: Install tarpaulin
+#        run: cargo install cargo-tarpaulin
+#      - name: Run tarpaulin
+#        run: cargo tarpaulin --out Xml
+#      - name: Upload CodeCov Report
+#        uses: codecov/codecov-action@v1
+#        with:
+#          token: ${{ secrets.CODECOV_TOKEN }}
+#          fail_ci_if_error: true
