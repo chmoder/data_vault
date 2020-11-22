@@ -57,10 +57,10 @@ jobs:
         run: |
           sudo apt update && sudo apt install -y postgresql-client-12 &&
           psql -h localhost -U postgres -d data_vault -c "CREATE TABLE public.data_vault (id bigserial NOT NULL PRIMARY KEY, \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
-          psql -h postgres -U postgres -d data_vault -c "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
+          psql -h localhost -U postgres -d data_vault -c "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
         env:
           PGPASSWORD: postgres
-          POSTGRES_HOST: postgres
+          POSTGRES_HOST: localhost
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: data_vault
