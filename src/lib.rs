@@ -36,7 +36,7 @@
 //!
 //! use tokio;
 //!
-//! #[tokio::main(core_threads = 4)]
+//! #[tokio::main(flavor = "multi_thread")]
 //! async fn main() {
 //!     let vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
 //!
