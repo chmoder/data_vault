@@ -60,6 +60,8 @@ jobs:
           docker network ls &&
           psql -h localhost -U postgres -d data_vault -c "CREATE TABLE public.data_vault (id bigserial NOT NULL PRIMARY KEY, \"token\" varchar(64) NOT NULL, credit_card bytea NOT NULL);" &&
           psql -h localhost -U postgres -d data_vault -c "CREATE UNIQUE INDEX data_vault_token_idx ON public.data_vault USING btree (token);"
+        env:
+          PGPASSWORD: postgres
       - name: Checkout Data Vault
         uses: actions/checkout@v2
       - name: Build
