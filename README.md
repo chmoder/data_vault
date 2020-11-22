@@ -68,25 +68,29 @@ async fn main() {
 - Store `String`
 - Automatic Encryption and Decryption
 - Blake3 tokenization
-- Redis Server, URL connection configuration
+- Redis pool
+- Postgres pool
 - Configurable from .env file or Environment Variables
+- Interchangeable Backend
 - Interchangeable Encryption
 - Interchangeable Tokenization hasher
 
-# Future Features
-- Postgres Database
 
-# Performance
-This [example](https://github.com/chmoder/data_vault/blob/master/examples/benchmark.rs) output the following performance stats with an AMD Ryzen 9 3900X.
-Showing the possibility of tokenizing **~100,000** credit cards per second.
+# Performance (AMD Ryzen 9 3900X)
+## Redis
+This [example](https://github.com/chmoder/data_vault/blob/master/examples/redis_benchmark.rs) output the following performance stats
+Tokenized **~100,000** credit cards per second.
 ```
 tokenized and stored 100000 credit cards in 1.058474365s
 retrieved 100000 credit cards in 5.353857633s
 tokenized, stored, and retrieved 100000 credit cards in 6.412331998s
 ```
 
-### Notice:
-This is under development right now, so interfaces
-and apis will be changing.  If you are interested
-in using this please create an issue or reach out
-with your feature request so I can help add it.
+## Postgres
+This [example](https://github.com/chmoder/data_vault/blob/master/examples/postgres_benchmark.rs) output the following performance stats
+Tokenized **~1,500** credit cards per second.
+```
+tokenized and stored 1000 credit cards in 635.963241ms
+retrieved 1000 credit cards in 938.834896ms
+tokenized, stored, and retrieved 1000 credit cards in 1.574798137s
+```
