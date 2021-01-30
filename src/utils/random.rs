@@ -1,4 +1,3 @@
-use std::iter;
 use rand::{Rng, thread_rng};
 use rand::distributions::Alphanumeric;
 
@@ -14,9 +13,9 @@ impl Salt {
     /// ```
     pub fn generate(length: usize) -> String {
         let mut rng = thread_rng();
-        iter::repeat(())
-            .map(|()| rng.sample(Alphanumeric))
+        (&mut rng).sample_iter(Alphanumeric)
             .take(length)
+            .map(char::from)
             .collect()
     }
 }
