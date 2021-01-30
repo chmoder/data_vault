@@ -10,8 +10,9 @@ description = "Data Vault is a modular, pragmatic, credit card vault for Rust."
 license = "MIT"
 
 [dependencies]
-deadpool-redis = { version = "^0.6" }
-deadpool-postgres = { version = "^0.6" }
+deadpool-redis = { version = "^0.7" }
+redis = { version = "0.19", default-features = false, features = ["aio"] }
+deadpool-postgres = { version = "^0.7" }
 config-crate = {package = "config", version = "^0.10", default-features = false }
 serde = { version = "^1.0", features = ["derive"] }
 serde_json = { version = "^1.0" }
@@ -19,18 +20,19 @@ async-trait = "^0.1" # remove some day hopefully
 credit_card = { version = "^0.1" }
 dotenv = "^0.15"
 hex = "^0.4"
-block-modes = "^0.5"
-aes-gcm-siv = "^0.5"
-aes = "^0.4"
-rand = "^0.7"
+block-modes = "^0.7"
+aes-gcm-siv = "^0.9"
+aes = "^0.6"
+rand = "^0.8"
 blake3 = "^0.3"
 
 [dev-dependencies]
 criterion = "^0.3"
-env_logger = "^0.7"
+env_logger = "^0.8"
 log = "^0.4"
 futures = "^0.3"
-tokio = { version = "^0.3", features = ["full"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+redis = { version = "0.19", default-features = false, features = ["tokio-comp"] }
 
 [lib]
 bench = false
