@@ -123,7 +123,7 @@ impl Aes128CbcCipher for Aes128CbcEncryption {
     /// let cipher = enc.new_cipher();
     /// ```
     fn new_cipher(&self) -> Cbc<Aes128, Pkcs7> {
-        Aes128Cbc::new_var(self.key.as_slice(), self.iv.as_slice()).unwrap()
+        Aes128Cbc::new_from_slices(self.key.as_slice(), self.iv.as_slice()).unwrap()
     }
 }
 
