@@ -1,7 +1,7 @@
 use log::{info};
 use tokio;
 use credit_card::CreditCard;
-use data_vault::{RedisDataVault, DataVault, PostgresDataVault};
+use data_vault::{RedisDataVault, DataVault};
 use std::vec;
 use std::time::{Instant};
 use std::sync::Arc;
@@ -13,7 +13,7 @@ async fn main() {
     env_logger::init();
 
     let mut token_futures = vec::Vec::new();
-    let redis_vault = PostgresDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
+    let redis_vault = RedisDataVault::<AesGcmSivEncryption, Blake3Tokenizer>::new().unwrap();
     let vault = Arc::new(redis_vault);
     let cc = Arc::new(CreditCard {
         number: "4111111111111111".to_string(),
@@ -24,7 +24,7 @@ async fn main() {
         security_code: None
     });
 
-    let to_store:i32 = 1000;
+    let to_store:i32 = 100000;
     println!("start");
     let start_time = Instant::now();
 

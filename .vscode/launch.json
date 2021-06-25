@@ -1,0 +1,121 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'data_vault'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=data_vault"
+                ],
+                "filter": {
+                    "name": "data_vault",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'redis_benchmark'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--release",
+                    "--example=redis_benchmark",
+                    "--package=data_vault"
+                ],
+                "filter": {
+                    "name": "redis_benchmark",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in example 'redis_benchmark'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--example=redis_benchmark",
+                    "--package=data_vault"
+                ],
+                "filter": {
+                    "name": "redis_benchmark",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug example 'postgres_benchmark'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--example=postgres_benchmark",
+                    "--package=data_vault"
+                ],
+                "filter": {
+                    "name": "postgres_benchmark",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in example 'postgres_benchmark'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--example=postgres_benchmark",
+                    "--package=data_vault"
+                ],
+                "filter": {
+                    "name": "postgres_benchmark",
+                    "kind": "example"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug benchmark 'data_vault_benchmark'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bench=data_vault_benchmark",
+                    "--package=data_vault"
+                ],
+                "filter": {
+                    "name": "data_vault_benchmark",
+                    "kind": "bench"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
