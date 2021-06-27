@@ -92,18 +92,18 @@ async fn main() {
 # Performance (AMD Ryzen 9 3900X)
 ## Redis
 This [example](https://github.com/chmoder/data_vault/blob/master/examples/redis_benchmark.rs) output the following performance stats
-Tokenized **~100,000** credit cards per second.
+Tokenize and stored **~18,000** credit cards per second.
 ```
-tokenized and stored 100000 credit cards in 1.058474365s
-retrieved 100000 credit cards in 5.353857633s
-tokenized, stored, and retrieved 100000 credit cards in 6.412331998s
+tokenized and stored 100000 credit cards in 5.550836728s
+retrieved 100000 credit cards in 5.8276298s
+tokenized, stored, and retrieved 100000 credit cards in 11.378466528s
 ```
 
 ## Postgres
 This [example](https://github.com/chmoder/data_vault/blob/master/examples/postgres_benchmark.rs) output the following performance stats
-Tokenized **~1,500** credit cards per second.
+Tokenize and Store **~3,000** credit cards per second.
 ```
-tokenized and stored 1000 credit cards in 635.963241ms
-retrieved 1000 credit cards in 938.834896ms
-tokenized, stored, and retrieved 1000 credit cards in 1.574798137s
+tokenized and stored 1000 credit cards in 336.54986ms
+retrieved 1000 credit cards in 54.622188ms
+tokenized, stored, and retrieved 1000 credit cards in 391.172048ms
 ```
